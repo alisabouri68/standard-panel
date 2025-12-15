@@ -1,0 +1,246 @@
+---glan11
+
+>>> ID															//? Defining Actor
+
+    /// step.01 -  Complete Meta Data
+
+    # meta
+        . model_id:				"dynaman"
+        . model_title:			"Dynamic State Manager"
+        . model_version:		"V00.04"
+        . model_lastUpgrade:	"D2025.12.14"	      				/// use the header date
+        . model_owner			"smart68"
+
+        . model_type			"Instant"	      							
+        . origin_model			"ACTR"								/// Dyna manager role ENVI
+        . origin_model_Ver		"V00.04"
+        . model_rem				"A dynamic state management system with Redux integration, multi-layer persistence, TTL support, debounced writes, and intelligent subscription notifications."	
+
+	/// Objectives:
+
+        /// 1. Integrate with Redux for centralized state management
+
+        /// 2. Provide multi-layer persistence (Memory, LocalStorage, SessionStorage, Cookie)
+
+        /// 3. Implement TTL (Time-To-Live) for automatic data expiration
+
+        /// 4. Offer debounced writes for performance optimization
+
+        /// 5. Enable intelligent subscription notifications with value comparison
+
+        /// 6. Support bulk operations and path-based state manipulation
+
+	
+
+	
+
+
+
+-->
+
+
+>>> MNGT
+
+    /// step.02 -  Management - Render
+
+    # render(1)                                                                /// 
+        . scat:                     "RACT"                                     /// React Actor Category
+        . langBase:                 "ts"                                       /// TypeScript
+		. universal-url:			"gRepo/RACT/RACT_dynaMan_V00.04/index.ts"  /// 
+
+
+    /// step.03 - Management - Dependency (kernels)							   /// هیچ کتابخانه ای به صورت مستقیم ندارد
+
+  
+
+
+    /// step.04 - Management Dependencies (co-act)                            ///  به هیچ اکتوری فعلا وابسته نیست
+
+
+
+
+-->
+
+
+>>> LOGIC
+
+    /// Step.05  - Envi Variable (only in ACTRs, Comps , XApps)             /// Configuration through persistMap
+
+
+
+
+    /// Step.06 - Local Variable Define                                       
+
+    . subscribers:                  Array<SubscribeEntry>                   /// List of active subscribers
+    . persistMap:                   Map<string, PersistConfig>              /// Persistence configuration mapping
+		
+
+
+
+
+
+
+    /// step.07 - Script List
+	
+
+
+    /// Script Group 1: Constructor & Configuration
+
+
+	$ DynaManager()				                                            /// Constructor - Creates new DynaManager instance
+									                                        /// Initializes: subscribers array, persistMap
+									                                        /// Returns: DynaManager instance
+
+	$ configurePersist(cfgs)			                            	    /// Configures persistence for specific paths
+									                                        /// Parameters: cfgs - Array of PersistConfig objects
+									                                        /// Action: Maps paths to persistence configurations
+									                                        /// Returns: void
+
+
+
+
+    /// Script Group 2: State Reading Operations
+
+
+
+	$ get(path?)					                                        /// Reads value from path with multi-layer fallback
+									                                        /// Parameters: path (optional) - Target path
+									                                        /// Fallback order: MemoryLayer -> Redux -> Storage layers
+									                                        /// Returns: Promise resolving to value or complete state
+
+	$ async get(path?)				                                        /// Async version for Promise-based operations
+
+
+
+
+    /// Script Group 3: State Writing Operations
+
+
+
+	$ set(path, value)				                                        /// Sets value for specific path
+									                                        /// Parameters: path - Target path, value - New value
+									                                        /// Actions: Updates Redux, MemoryLayer, persist layers
+									                                        /// Triggers: Subscriber notifications
+
+	$ merge(path, value)			                                        /// Merges value with existing value (shallow merge)
+									                                        /// Parameters: path - Target path, value - Value to merge
+									                                        /// Action: Performs shallow merge, updates all layers
+									                                        /// Returns: void
+
+	$ bulkSet(values)				                                        /// Sets multiple paths simultaneously
+									                                        /// Parameters: values - Object with path-value pairs
+									                                        /// Actions: Bulk Redux update, layer updates
+									                                        /// Triggers: Notify all subscribers
+
+
+
+
+    /// Script Group 4: Subscription Management
+
+
+
+	$ subscribe(cb, path?)			                                        /// Subscribes to state changes
+									                                        /// Parameters: cb - Callback function, path (optional) - Target path
+									                                        /// Returns: Unsubscribe function
+									                                        /// Note: Includes initial value callback
+
+	$ notifySubscribers(path)		                                        /// Notifies relevant subscribers of changes
+									                                        /// Parameters: path - Changed path
+									                                        /// Action: Compares values, triggers callbacks if changed
+
+	$ notifyAll()					                                        /// Notifies all subscribers
+									                                        /// Action: Checks all subscriptions for changes
+
+
+
+
+    /// Script Group 5: State Management & Cleanup
+
+
+
+	$ reset(next?)				                                            /// Resets complete state
+									                                        /// Parameters: next (optional) - New state value
+									                                        /// Actions: Clears Redux, MemoryLayer, persisted layers
+									                                        /// Triggers: Notify all subscribers
+
+	$ clearPersist()				                                        /// Clears all persisted data
+									                                        /// Action: Clears all storage layers
+									                                        /// Returns: Promise of operation completion
+
+
+
+
+    /// Script Group 6: Helper & Utility Methods
+
+
+
+	$ getPersistConfig(path)		                                        /// Retrieves persistence configuration for path
+									                                        /// Parameters: path - Target path
+									                                        /// Returns: PersistConfig or undefined
+
+	$ hasPersist(path)			                                        	/// Checks if path has persistence configured
+									                                        /// Parameters: path - Target path
+									                                        /// Returns: boolean
+
+	$ listSubscribedPaths()		                                        	/// Lists all currently subscribed paths
+									                                        /// Returns: Array of path strings
+
+	$ getSubscriberCount()		                                        	/// Gets count of active subscribers
+									                                        /// Returns: number
+
+
+
+
+    /// Script Group 7: Storage Layer Operations
+
+
+
+	$ persistToLayers(cfg, value)	                                        /// Persists value to configured storage layers
+									                                        /// Parameters: cfg - PersistConfig, value - Value to persist
+									                                        /// Action: Writes to MemoryLayer + configured storages
+
+	$ readFromLayers(cfg, defaultValue)	                               	    /// Reads value from storage layers
+									                                        /// Parameters: cfg - PersistConfig, defaultValue - Fallback value
+									                                        /// Returns: Promise resolving to retrieved value
+
+
+
+
+    /// Script Group 8: Performance & Optimization
+
+
+
+	$ debounceSet(path, value, delay)                                       /// Debounced version of set operation
+									                                        /// Parameters: path, value, delay - Debounce delay in ms
+									                                        /// Returns: Promise resolving after operation
+
+	$ batchUpdate(operations)		                                        /// Batches multiple update operations
+									                                        /// Parameters: operations - Array of update operations
+									                                        /// Returns: Promise of batch completion
+
+	$ clearMemoryLayer()			                                        /// Clears only MemoryLayer (in-memory cache)
+									                                        /// Action: Preserves other storage layers
+
+
+
+
+    /// Script Group 9: Singleton & Instance Management
+
+
+
+	$ DynaMan						                                        /// Singleton instance export
+									                                        /// Type: DynaManager instance
+									                                        /// Usage: Import for global access
+
+	$ createInstance(config)		                                        /// Creates new manager instance with custom config
+									                                        /// Parameters: config - Configuration object
+									                                        /// Returns: New DynaManager instance
+
+
+
+
+
+-->
+
+---
+

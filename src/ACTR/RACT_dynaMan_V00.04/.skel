@@ -1,0 +1,95 @@
+---glan11
+
+///   Template for all .skell for Actors
+
+/// ---------------------------------------
+/// model:              dynaman
+/// last update:        D2025.15.12
+/// by:                 smart68
+/// ---------------------------------------
+
+>>> ID
+
+	/// Step 1 - Meta Define
+
+	# meta 										
+		. genix-id:			"dynaman"				/// mandatory - Geneix ID
+		. genix-title:		"dynamic manager"		/// optional - default=id
+		. genix-version:	"V00.04"				/// model version
+		. genix-scat:		"RACT"					/// Geneix SCAT same as original model
+		. genix-lastUpgrade:	"D2025.15.12"
+		. genix-developer:	"smart68"
+		. bioModel-id:		"ACTR"					/// Original Bio-Model
+		. bioModel-ver:		"V00.04"				
+		. genix-rem:		"template for Skeleton"	
+
+-->
+
+>>> MNGT
+
+	@ builder (1)
+		.#packet1 
+		.	. field112
+		.$build-asst-1 -par: "@this.#builder.field112" -opt {}
+		.$build-asst-2 -par: -opt { }
+
+-->
+
+>>> Body
+
+	/// Step.02 - List of Assets (only dynamic asset in V00.04)
+
+	# asset (1)
+	.id:				".schm"			/// main scheme file of the model
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (2)
+	.id:				".skel"			/// Skeleton file, initial Actor structure
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (3)
+	.id:				"index.ts"		/// main entry of DynaManager module
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (4)
+	.id:				"cookie.ts"		/// helper functions for cookie management (get, set, delete)
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (5)
+	.id:				"localStorage.ts"	/// manage values in localStorage
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (6)
+	.id:				"memory.ts"		/// in-memory layer for fast cache
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (7)
+	.id:				"persist.ts"	/// manage reading/writing to persistence layers
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (8)
+	.id:				"sessionStorage.ts"	/// manage values in sessionStorage
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (9)
+	.id:				"path.ts"		/// helper functions to safely access nested paths
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	# asset (10)
+	.id:				"serializer.ts"	/// default serializer for persisting data
+	.url:				"./"
+	.dynamic:			"FALSE"
+
+	/// Step.03 - No Capsule allowed inside the Actor
+
+-->
+--- 

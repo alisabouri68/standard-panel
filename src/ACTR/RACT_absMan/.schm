@@ -1,0 +1,335 @@
+---glan11
+
+>>> ID															//? Defining Actor
+
+    /// step.01 -  Complete Meta Data
+
+    # meta
+        . model_id:				"absman"
+        . model_title:			"Abstract Manager"
+        . model_version:		"V00.04"
+        . model_lastUpgrade:	"D2025.12.14"	      			/// use the header date
+        . model_owner			"APPS48"
+
+        . model_type			"Instant"	      							
+        . origin_model			"ACTR"							/// Actor Mutage Model
+        . origin_model_Ver		"V00.04"
+        . model_rem				"An abstract management system for creating, managing, and manipulating complex data structures with the ability to organize hierarchically, add/delete/edit sections, support for multiple dimensions, and compact storage."	
+
+	/// Objectives:
+
+        /// 1. تعریف طرح اولیه (Schema Definition)
+
+        /// 2. ایجاد بسته‌های منطقی (Pack Creation)
+
+        ///3. اضافه کردن فیلدها (Field Addition)
+
+        ///4. تنظیم ابعاد و ویژگی‌ها (Dimension Configuration)
+
+        ///5. مقداردهی و تنظیم مقادیر (Value Assignment)
+
+        ///6. ذخیره‌سازی/بارگذاری (Serialization/Deserialization)
+
+	
+
+	
+
+
+
+-->
+
+
+>>> MNGT
+
+    /// step.02 -  Management - Render
+
+    # render(1)                                                                 /// 
+        . scat:                     "RACT"                                      /// React Actor Category
+        . langBase:                 "ts"                                        /// TypeScript
+		. universal-url:			"gRepo/RACT/RACT_absMan/index.tsx"			/// 
+
+
+    /// step.03 - Management - Dependency (kernels)
+
+    # kernel(1)                                     
+        . id:                       "react-redux"                               /// React-Redux integration for state management                              
+        . default:                  false
+    # kernel(2)                     
+        . id:                       "lodash"                                    /// Utility functions for data manipulation
+        . default:                  false
+    # kernel(2)                     
+        . id:                       "lz-string"                                 /// String compression for efficient storage
+        . default:                  false
+
+
+
+    /// step.04 - Management Dependencies (co-act)                             ///   هیچ اکتوری به ابس من وابسته نیست و وابستگی به اکتور فعلا ندارد
+
+
+
+-->
+
+
+>>> LOGIC
+
+    /// Step.05  - Envi Variable (only in ACTRs, Comps , XApps)               ///ندارد
+
+
+
+
+
+    /// Step.06 - Local Variable Define                                       ///ندارد
+
+
+		
+
+
+
+
+
+
+    /// step.07 - Script List
+	
+
+
+    /// Script Group 1: Core Methods
+
+
+
+	$ AbsMan(nttStructure)			                                            /// Constructor - Creates new AbsMan instance
+									                                            /// Parameters: nttStructure (optional) - Initial data structure
+									                                            /// Returns: AbsMan instance
+
+	$ serialize()					                                            /// Compresses instance to Base64 LZ-string
+									                                            /// Returns: Compressed string
+
+	$ unserialize(str)				                                            /// Restores instance from compressed string
+									                                            /// Parameters: str - Compressed Base64 string
+									                                            /// Returns: Parsed data
+
+	$ stringify()					                                            /// Converts instance to JSON string with type markers
+									                                            /// Returns: JSON string
+
+	$ parse(str)					                                            /// Parses JSON string and reconstructs instance
+									                                            /// Parameters: str - JSON string
+									                                            /// Returns: Parsed object
+
+	$ get NTT()						                                            /// Getter - Returns entire NTT object
+									                                            /// Returns: Complete data structure
+
+	$ set NTT(newNtt)				                                            /// Setter - Sets entire NTT object
+									                                            /// Parameters: newNtt - New data structure
+
+	$ generateVersion()				                                            /// Generates random serial number
+									                                            /// Returns: Random integer 1-9999999999
+
+	$ getMeta()						                                            /// Returns schema metadata
+									                                            /// Returns: meta object
+
+	$ setMeta(data)					                                            /// Updates schema metadata
+									                                            /// Parameters: data - Metadata object
+									                                            /// Returns: boolean success
+
+	$ getAxisName(axisType)			                                            /// Converts axis type to axis name
+									                                            /// Parameters: axisType - "mngt"|"gVar"|"mVar"|"body"|"mthd"
+									                                            /// Returns: axis name string
+
+
+
+
+    /// Script Group 2: Pack Management
+
+
+    
+
+	$ addPack(packId, axisType)		                                            /// Adds new pack to specified axis
+									                                            /// Parameters: packId - Pack identifier, axisType - Axis type
+									                                            /// Returns: boolean success
+                                            
+	$ getPack(packId)				                                            /// Retrieves pack by ID
+									                                            /// Parameters: packId - Pack identifier
+									                                            /// Returns: Pack object or false
+                                            
+	$ setPack(packId, data)			                                            /// Updates pack metadata
+									                                            /// Parameters: packId - Pack identifier, data - Metadata
+									                                            /// Returns: boolean success
+                                            
+	$ removePack(packId)			                                            /// Deletes pack from structure
+									                                            /// Parameters: packId - Pack identifier
+									                                            /// Returns: boolean success
+
+
+
+    /// Script Group 3: Field Management
+
+
+
+	$ addField(packId, fieldId)		                                            /// Adds new field to specified pack
+									                                            /// Parameters: packId - Pack identifier, fieldId - Field identifier
+									                                            /// Returns: boolean success
+                                            
+	$ getField(packId, fieldId)		                                            /// Retrieves field from pack
+									                                            /// Parameters: packId - Pack identifier, fieldId - Field identifier
+									                                            /// Returns: Field object or false
+
+	$ setField(packId, fieldId, data)                                           /// Updates field metadata
+									                                            /// Parameters: packId, fieldId, data - Metadata
+									                                            /// Returns: boolean success
+
+	$ removeField(packId, fieldId)	                                            /// Deletes field from pack
+									                                            /// Parameters: packId, fieldId
+									                                            /// Returns: boolean success
+
+
+
+/// Script Group 4: Dimension System
+
+
+
+	$ registerDimension(packId, fieldId, params)                                /// Registers new dimension for field
+									                                            /// Parameters: packId, fieldId, params - Dimension parameters
+									                                            /// Returns: boolean success
+
+	$ getDimensions()				                                            /// Returns all available dimensions
+									                                            /// Returns: Object with dimension classes
+
+	$ getDimension(cls, dim)		                                            /// Gets specific dimension by class and name
+									                                            /// Parameters: cls - Class name, dim - Dimension name
+									                                            /// Returns: Dimension object
+
+	$ sortDimensions(packId, fieldId, order)                                    /// Sorts dimensions within pack
+									                                            /// Parameters: packId, fieldId, order (optional) - Position
+									                                            /// Returns: void
+
+	$ addDimension(packId, fieldId, cls, dim, order)                            /// Adds dimension to field
+									                                            /// Parameters: packId, fieldId, cls, dim, order (optional)
+									                                            /// Returns: boolean success
+
+	$ setDimension(packId, fieldId, paramId, data)                              /// Updates dimension parameter
+									                                            /// Parameters: packId, fieldId, paramId, data
+									                                            /// Returns: boolean success
+
+
+
+
+/// Script Group 5: Data Accessors
+
+
+
+
+	$ getitem(packId, fieldId, paramId, itemId)                                 /// Gets specific item value
+									                                            /// Parameters: packId, fieldId, paramId, itemId
+									                                            /// Returns: Item value or empty string
+
+	$ value(packId, fieldId, value)	                                            /// Sets edit value for field
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ getValue(packId, fieldId)		                                            /// Gets current edit value
+									                                            /// Parameters: packId, fieldId
+									                                            /// Returns: Value or undefined
+
+	$ id(packId, fieldId, value)	                                            /// Sets config ID for field
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ view(packId, fieldId, value)	                                            /// Sets view type for field
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ array(packId, fieldId, value)	                                            /// Sets array configuration
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ language(packId, fieldId, value)                                          /// Sets language setting
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ defReset(packId, fieldId, value)                                          /// Sets default reset value
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ changeScale(packId, fieldId, value)                                       /// Sets change scale setting
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ furmula(packId, fieldId, value)                                           /// Sets formula configuration
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ defVal(packId, fieldId, value)                                            /// Sets default value
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ getDefValue(packId, fieldId)	                                            /// Gets default value
+									                                            /// Parameters: packId, fieldId
+									                                            /// Returns: Default value or empty string
+
+	$ unit(packId, fieldId, value)	                                            /// Sets measurement unit
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ subUnit(packId, fieldId, value)                                           /// Sets sub-unit measurement
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ scaleOp(packId, fieldId, value)                                           /// Sets scale options array
+									                                            /// Parameters: packId, fieldId, value (array)
+									                                            /// Returns: boolean
+
+	$ format(packId, fieldId, value)                                            /// Sets format pattern
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ validation(packId, fieldId, value)                                        /// Sets validation rules
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ validTime(packId, fieldId, value)                                         /// Sets validation time
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ widget(packId, fieldId, value)                                            /// Sets widget type
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ icon(packId, fieldId, value)	                                            /// Sets icon identifier
+									                                            /// Parameters: packId, fieldId, value
+									                                            /// Returns: boolean
+
+	$ reset(packId, fieldId, value)	                                            /// Sets reset flag
+									                                            /// Parameters: packId, fieldId, value (boolean)
+									                                            /// Returns: boolean
+
+	$ editable(packId, fieldId, value)                                          /// Sets editable flag
+									                                            /// Parameters: packId, fieldId, value (boolean)
+									                                            /// Returns: boolean
+
+	$ picker(packId, fieldId, value)                                            /// Sets picker enabled flag
+									                                            /// Parameters: packId, fieldId, value (boolean)
+									                                            /// Returns: boolean
+
+	$ optionList(packId, fieldId, value)                                        /// Sets option list array
+									                                            /// Parameters: packId, fieldId, value (array)
+									                                            /// Returns: boolean
+
+
+
+    /// Script Group 6: Static Methods
+
+
+
+
+	$ useAppDispatch()				                                            /// React-Redux typed useDispatch hook
+									                                            /// Returns: useDispatch hook with AppDispatch type
+
+	$ useAppSelector()				                                            /// React-Redux typed useSelector hook
+									                                            /// Returns: useSelector hook with RootState type
+
+
+
+
+
+-->
+
+---
